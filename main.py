@@ -58,7 +58,7 @@ def main():
     arg_parser = argparse.ArgumentParser(description=__doc__)
     arg_parser.add_argument('image', type=str, help='input image')
     arg_parser.add_argument('-s', '--scribbles', type=str, help='input scribbles')
-    arg_parser.add_argument('-o', '--output', type=str, required=True, help='output image')
+    #arg_parser.add_argument('-o', '--output', type=str, required=True, help='output image')
     args = arg_parser.parse_args()
 
     image = cv2.imread(args.image, cv2.IMREAD_COLOR) / 255.0
@@ -76,7 +76,8 @@ def main():
     solution = scipy.sparse.linalg.spsolve(laplacian + confidence,prior.flatten() * prior_confidence.flatten())
     #Ensure that the result lie within the range [0, 1]
     alpha = np.clip(solution.reshape(prior.shape), 0, 1)
-    cv2.imwrite(args.output, alpha * 255.0)
+    output="result.png"
+    cv2.imwrite(output, alpha * 255.0)
 
 
 if __name__ == "__main__":
