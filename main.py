@@ -61,9 +61,11 @@ def main():
     #arg_parser.add_argument('-o', '--output', type=str, required=True, help='output image')
     args = arg_parser.parse_args()
 
-    image = cv2.imread(args.image, cv2.IMREAD_COLOR) / 255.0
+    image_input = cv2.imread(args.image, cv2.IMREAD_COLOR) 
+    image=image_input/ 255.0
 
-    scribbles = cv2.imread(args.scribbles, cv2.IMREAD_COLOR) / 255.0
+    scribbles_input = cv2.imread(args.scribbles, cv2.IMREAD_COLOR)
+    scribbles= scribbles_input / 255.0
 
     prior = np.sign(np.sum(image - scribbles, axis=2)) / 2 + 0.5
     #Constant map 
@@ -76,8 +78,11 @@ def main():
     solution = scipy.sparse.linalg.spsolve(laplacian + confidence,prior.flatten() * prior_confidence.flatten())
     #Ensure that the result lie within the range [0, 1]
     alpha = np.clip(solution.reshape(prior.shape), 0, 1)
-    output="result.png"
-    cv2.imwrite(output, alpha * 255.0)
+    cv2.imwrite("output.png", alpha * 255.0)
+    cv2.imwrite("input.png", image_input)
+    cv2.imwrite("scribles.png", scribbles_input)
+
+
 
 
 if __name__ == "__main__":
