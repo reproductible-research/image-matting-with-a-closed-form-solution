@@ -5,7 +5,8 @@ Image Matting is a crucial process in accurately estimating the foreground objec
 ## Overview
 This project implements the "A Closed Form Solution to Natural Image Matting" method proposed by A. Levin, D. Lischinski, and Y. Weiss. The method was presented at the IEEE Conference on Computer Vision and Pattern Recognition (CVPR) in June 2006, New York.
 
-The paper describing the method can be found [here]([http://www.wisdom.weizmann.ac.il/~levina/papers/Matting-Levin-Lischinski-Weiss-CVPR06.pdf](https://people.csail.mit.edu/alevin/papers/Matting-Levin-Lischinski-Weiss-CVPR06.pdf]).
+The paper describing the method can be found [here](https://people.csail.mit.edu/alevin/papers/Matting-Levin-Lischinski-Weiss-CVPR06.pdf).
+
 
 ## Purpose
 The purpose of this project is to provide a Python implementation of the image matting technique. By implementing this method, users can accurately estimate foreground objects in images and videos, which can be beneficial for various image and video editing applications.
@@ -17,4 +18,4 @@ To use this implementation, follow these steps:
 3. Run the main script to perform image matting on your desired images or videos.
 
 ## References
-- A. Levin, D. Lischinski, and Y. Weiss. "A Closed Form Solution to Natural Image Matting". IEEE Conf. on Computer Vision and Pattern Recognition (CVPR), June 2006, New York. [Link to Paper]([http://www.wisdom.weizmann.ac.il/~levina/papers/Matting-Levin-Lischinski-Weiss-CVPR06.pdf](https://people.csail.mit.edu/alevin/papers/Matting-Levin-Lischinski-Weiss-CVPR06.pdf]).
+- A. Levin, D. Lischinski, and Y. Weiss. "A Closed Form Solution to Natural Image Matting". IEEE Conf. on Computer Vision and Pattern Recognition (CVPR), June 2006, New York. [Link to Paper](https://people.csail.mit.edu/alevin/papers/Matting-Levin-Lischinski-Weiss-CVPR06.pdf).
