@@ -25,12 +25,12 @@ python main.py input_image.png -s scribbles.png -o output_alpha.png
 ## 📷 Example
 Here is an example of input image, scribbles image, and the obtained result:
 
-<div style="display: flex; flex-direction: column; align-items: center;">
-  <div style="text-align: center; margin-bottom: 20px;">
+<div style="display: flex; justify-content: center; align-items: center;">
+  <div style="text-align: center; margin-right: 20px;">
     <p style="font-size: 14px;">Input Image</p>
     <img src="input_image.png" alt="Input Image" style="width: 200px; height: auto;">
   </div>
-  <div style="text-align: center; margin-bottom: 20px;">
+  <div style="text-align: center; margin-right: 20px;">
     <p style="font-size: 14px;">Scribbles Image</p>
     <img src="scribbles.png" alt="Scribbles Image" style="width: 200px; height: auto;">
   </div>
@@ -39,6 +39,7 @@ Here is an example of input image, scribbles image, and the obtained result:
     <img src="output.png" alt="Result" style="width: 200px; height: auto;">
   </div>
 </div>
+
 
 
 
