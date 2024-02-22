@@ -23,9 +23,7 @@ python main.py input_image.png -s scribbles.png -o output_alpha.png
 ```
 
 
-##  📚 References
 
-- A. Levin, D. Lischinski, and Y. Weiss. "A Closed Form Solution to Natural Image Matting". IEEE Conf. on Computer Vision and Pattern Recognition (CVPR), June 2006, New York. [Link to Paper](https://people.csail.mit.edu/alevin/papers/Matting-Levin-Lischinski-Weiss-CVPR06.pdf).
 
 
 
