@@ -22,6 +22,17 @@ After cloning the repository, run the following command in your terminal:
 python main.py input_image.png -s scribbles.png -o output_alpha.png
 ```
 
+## 📷 Example
+Here is an example of input image, scribbles image, and the obtained result:
+
+**Input Image:**
+![Input Image](input_image.png)
+
+**Scribbles Image:**
+![Scribbles Image](scribbles.png)
+
+**Result:**
+![Result](output.png)
 
 
 
