@@ -25,14 +25,20 @@ python main.py input_image.png -s scribbles.png -o output_alpha.png
 ## 📷 Example
 Here is an example of input image, scribbles image, and the obtained result:
 
-**Input Image:**
-![Input Image](input_image.png)
-
-**Scribbles Image:**
-![Scribbles Image](scribbles.png)
-
-**Result:**
-![Result](output.png)
+<div style="display: flex; justify-content: center; align-items: center;">
+  <div style="flex: 1; padding: 10px;">
+    <p style="text-align: center;">Input Image</p>
+    <img src="input_image.png" alt="Input Image" style="width: 300px; height: auto;">
+  </div>
+  <div style="flex: 1; padding: 10px;">
+    <p style="text-align: center;">Scribbles Image</p>
+    <img src="scribbles.png" alt="Scribbles Image" style="width: 300px; height: auto;">
+  </div>
+  <div style="flex: 1; padding: 10px;">
+    <p style="text-align: center;">Result</p>
+    <img src="output.png" alt="Result" style="width: 300px; height: auto;">
+  </div>
+</div>
 
 
 
