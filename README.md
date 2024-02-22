@@ -26,9 +26,9 @@ python main.py input_image.png -s scribbles.png -o output_alpha.png
 Here is an example of input image, scribbles image, and the obtained result:
 
 
-| Original image                           | Scribbled image                           | Output alpha                             | Output foreground                         |
-|------------------------------------------|-------------------------------------------|------------------------------------------|-------------------------------------------|
-| ![Original image](testdata/source.png)   | ![Scribbled image](testdata/scribbles.png) | ![Output alpha](testdata/output_alpha.png) | ![Output foreground](testdata/output_foreground.png) |
+| Original image                           | Scribbled image                           | Output alpha                             | 
+|------------------------------------------|-------------------------------------------|------------------------------------------|
+| ![Original image](input_image.png)   | ![Scribbled image](scribbles.png) | ![Output alpha](output.png) |
 
 
 
