@@ -25,22 +25,10 @@ python main.py input_image.png -s scribbles.png -o output_alpha.png
 ## 📷 Example
 Here is an example of input image, scribbles image, and the obtained result:
 
-<div style="display: flex; justify-content: center; align-items: center; text-align: center; margin-right: 10px;">
-  <div style="margin-right: 10px;">
-    <p style="font-size: 14px;">Input Image</p>
-    <img src="input_image.png" alt="Input Image" style="width: 200px; height: auto;">
-  </div>
-  <div style="margin-right: 10px;">
-    <p style="font-size: 14px;">Scribbles Image</p>
-    <img src="scribbles.png" alt="Scribbles Image" style="width: 200px; height: auto;">
-  </div>
-  <div>
-    <p style="font-size: 14px;">Result</p>
-    <img src="output.png" alt="Result" style="width: 200px; height: auto;">
-  </div>
-</div>
 
-
+| Original image                           | Scribbled image                           | Output alpha                             | Output foreground                         |
+|------------------------------------------|-------------------------------------------|------------------------------------------|-------------------------------------------|
+| ![Original image](testdata/source.png)   | ![Scribbled image](testdata/scribbles.png) | ![Output alpha](testdata/output_alpha.png) | ![Output foreground](testdata/output_foreground.png) |
 
 
 
