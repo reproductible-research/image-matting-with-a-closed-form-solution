@@ -25,7 +25,7 @@ python main.py input_image.png -s scribbles.png -o output_alpha.png
 ## 📷 Example
 Here is an example of input image, scribbles image, and the obtained result:
 
-<div style="text-align: center; margin-right: 10px;"> flex; justify-content: center; align-items: center;">
+<div style="display: flex; justify-content: center; align-items: center; text-align: center; margin-right: 10px;">
   <img src="input_image.png" alt="Input Image" style="width: 300px; height: auto; margin-right: 10px;">
   <img src="scribbles.png" alt="Scribbles Image" style="width: 300px; height: auto; margin-right: 10px;">
   <img src="output.png" alt="Result" style="width: 300px; height: auto;">
