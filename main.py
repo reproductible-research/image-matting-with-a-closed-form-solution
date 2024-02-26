@@ -78,7 +78,7 @@ def main():
     solution = scipy.sparse.linalg.spsolve(laplacian + confidence,prior.flatten() * prior_confidence.flatten())
     #Ensure that the result lie within the range [0, 1]
     alpha = np.clip(solution.reshape(prior.shape), 0, 1)
-    cv2.imwrite("output.png", alpha * 255.0)
+    cv2.imwrite("output.png", (1-alpha) * 255.0)
     cv2.imwrite("input.png", image_input)
     cv2.imwrite("scribles.png", scribbles_input)
 
