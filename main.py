@@ -62,8 +62,10 @@ def main():
     arg_parser = argparse.ArgumentParser(description=__doc__)
     arg_parser.add_argument('image', type=str, help='input image')
     arg_parser.add_argument('-s', '--scribbles', type=str, help='input scribbles')
-    #arg_parser.add_argument('-o', '--output', type=str, required=True, help='output image')    args = arg_parser.parse_args()
+    #arg_parser.add_argument('-o', '--output', type=str, required=True, help='output image')    
+    args = arg_parser.parse_args()
     image_input = cv2.imread(args.image, cv2.IMREAD_COLOR) 
+    
     image=image_input/ 255.0
 
     scribbles_input = cv2.imread(args.scribbles, cv2.IMREAD_COLOR)
