@@ -8,12 +8,17 @@ from scipy.ndimage import binary_erosion
 import scipy.sparse
 import scipy.sparse.linalg
 import logging
+import sys
 
 
 
 
 #Calcualte Matting Laplacian 
 def getLaplacian(I, consts, epsilon=0.0000001, win_size=1):
+    '''
+    This funciton is used to calculate the laplacian matting as described in the paper
+    and return the sparse matrix of L  
+    '''
     logging.info('Computing Matting Laplacian ...')
     neb_size = (win_size * 2 + 1) ** 2
     h, w, c = I.shape
@@ -53,14 +58,14 @@ def getLaplacian(I, consts, epsilon=0.0000001, win_size=1):
 
 def main():
     import argparse
-
     logging.basicConfig(level=logging.INFO)
     arg_parser = argparse.ArgumentParser(description=__doc__)
     arg_parser.add_argument('image', type=str, help='input image')
     arg_parser.add_argument('-s', '--scribbles', type=str, help='input scribbles')
     #arg_parser.add_argument('-o', '--output', type=str, required=True, help='output image')
     args = arg_parser.parse_args()
-
+    if args.image.size != args.scribbles:
+        sys.exit()
     image_input = cv2.imread(args.image, cv2.IMREAD_COLOR) 
     image=image_input/ 255.0
 
