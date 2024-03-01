@@ -70,8 +70,11 @@ def main():
 
     scribbles_input = cv2.imread(args.scribbles, cv2.IMREAD_COLOR)
     scribbles= scribbles_input / 255.0
+    print(image_input.shape)
+    print(scribbles_input.shape)
     if image_input.shape != scribbles_input.shape:
-        sys.exit()
+        #sys.exit()
+        raise ValueError
     prior = np.sign(np.sum(image - scribbles, axis=2)) / 2 + 0.5
     #Constant map 
     consts_map = prior != 0.5
