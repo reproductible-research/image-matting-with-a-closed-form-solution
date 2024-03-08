@@ -1,3 +1,5 @@
+[![Repository License](https://img.shields.io/badge/license-GPL%20v3.0-brightgreen.svg)](COPYING)
+
 # 🖼️ Image Matting with A Closed Form Solution 
 
 Image Matting is a crucial process in accurately estimating the foreground object in images and videos. It finds extensive applications in various domains, particularly in film production for creating visual effects.
