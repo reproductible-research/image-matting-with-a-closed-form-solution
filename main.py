@@ -9,6 +9,8 @@ import scipy.sparse
 import scipy.sparse.linalg
 import logging
 import sys
+import pdb
+import matplotlib.pyplot as plt
 
 
 
@@ -20,7 +22,7 @@ def getLaplacian(I, consts, epsilon=1e-7, win_size=1):
     and return the sparse matrix of L  
     '''
     logging.info('Computing Matting Laplacian ...')
-    neb_size = (win_size * 2 + 1) ** 2
+    neb_size = (win_size * 2 + 1) ** 2 # neighbourhood size
     h, w, c = I.shape
     img_size = w * h
     consts = binary_erosion(consts, structure=np.ones((win_size * 2 + 1, win_size * 2 + 1)))
@@ -47,9 +49,11 @@ def getLaplacian(I, consts, epsilon=1e-7, win_size=1):
             col_inds[len_:len_ + neb_size ** 2] = np.tile(win_inds, neb_size)
             vals[len_:len_ + neb_size ** 2] = tvals.flatten()
             len_ += neb_size ** 2
+            
     vals = vals[:len_]
     row_inds = row_inds[:len_]
     col_inds = col_inds[:len_]
+    # pdb.set_trace()
     A = csr_matrix((vals, (row_inds, col_inds)), shape=(img_size, img_size))
     sumA = A.sum(axis=1)
     A = spdiags(sumA.flatten(), 0, img_size, img_size) - A
@@ -62,6 +66,7 @@ def main():
     arg_parser = argparse.ArgumentParser(description=__doc__)
     arg_parser.add_argument('image', type=str, help='input image')
     arg_parser.add_argument('-s', '--scribbles', type=str, help='input scribbles')
+    arg_parser.add_argument('-t', '--trimap', type=str, default='False', help='if the scribble is a trimap')
     #arg_parser.add_argument('-o', '--output', type=str, required=True, help='output image')    
     args = arg_parser.parse_args()
     image_input = cv2.imread(args.image, cv2.IMREAD_COLOR) 
@@ -75,20 +80,49 @@ def main():
     if image_input.shape != scribbles_input.shape:
         print("Error: There was a problem with the user input.")
         sys.exit()
-    prior = np.sign(np.sum(image - scribbles, axis=2)) / 2 + 0.5
+
     #Constant map 
-    consts_map = prior != 0.5
+    if args.trimap == 'True':
+        print('...')
+        prior = scribbles[:, :,0]
+        consts_map = (prior < 0.1) | (prior > 0.9)
+    else:
+        print(',,,')
+        prior = np.sign(np.sum(image - scribbles, axis=2)) / 2 + 0.5
+        consts_map = prior != 0.5
+            
+    # pdb.set_trace()
+    
     laplacian = getLaplacian(image, consts_map)
+    # print("image: ", image[10][:20])
+    # print("scribbles: ", scribbles[0][:20])
+    # print("prior: ", prior[10][:20])
+    # print("consts_map: ", consts_map[10][:20])
+    # print(laplacian.shape)
+    eig_vals, eig_vecs = scipy.sparse.linalg.eigs(laplacian)
+    # pdb.set_trace()
     scribbles_confidence=100
     prior_confidence = scribbles_confidence * consts_map
     confidence = scipy.sparse.diags(prior_confidence.flatten())
     logging.info('Solving the Linear System ...')
-    solution = scipy.sparse.linalg.spsolve(laplacian + confidence,prior.flatten() * prior_confidence.flatten())
+    solution = scipy.sparse.linalg.spsolve(laplacian + confidence, prior.flatten() * prior_confidence.flatten())
     #Ensure that the result lie within the range [0, 1]
+    # pdb.set_trace()
+    # print(confidence.shape)
+    # print(solution.shape)
+    # pdb.set_trace()
     alpha = np.clip(solution.reshape(prior.shape), 0, 1)
-    cv2.imwrite("output.png", (1-alpha) * 255.0)
-    cv2.imwrite("input.png", image_input)
-    cv2.imwrite("scribles.png", scribbles_input)
+    # pdb.set_trace()
+    # print(alpha[10][:20])
+    alpha_file_name = args.image.split('.')[0] + '_alpha' + '.' + args.image.split('.')[1]
+    cv2.imwrite(alpha_file_name, (1-alpha) * 255.0)
+    # cv2.imwrite("input.jpg", image_input)
+    # cv2.imwrite("scribles.jpg", scribbles_input)
+    
+    # Plotting eigenvalues and eigenvectors
+    plt.imshow(np.clip(eig_vecs.real.T[1].reshape(prior.shape), 0, 1))
+    # plt.plot(eig_vecs.real.T[1])
+    plt.show()
 
 
 
