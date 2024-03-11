@@ -90,38 +90,24 @@ def main():
         print(',,,')
         prior = np.sign(np.sum(image - scribbles, axis=2)) / 2 + 0.5
         consts_map = prior != 0.5
-            
-    # pdb.set_trace()
+
     
     laplacian = getLaplacian(image, consts_map)
-    # print("image: ", image[10][:20])
-    # print("scribbles: ", scribbles[0][:20])
-    # print("prior: ", prior[10][:20])
-    # print("consts_map: ", consts_map[10][:20])
-    # print(laplacian.shape)
     eig_vals, eig_vecs = scipy.sparse.linalg.eigs(laplacian)
-    # pdb.set_trace()
     scribbles_confidence=100
     prior_confidence = scribbles_confidence * consts_map
     confidence = scipy.sparse.diags(prior_confidence.flatten())
     logging.info('Solving the Linear System ...')
     solution = scipy.sparse.linalg.spsolve(laplacian + confidence, prior.flatten() * prior_confidence.flatten())
     #Ensure that the result lie within the range [0, 1]
-    # pdb.set_trace()
-    # print(confidence.shape)
-    # print(solution.shape)
-    # pdb.set_trace()
     alpha = np.clip(solution.reshape(prior.shape), 0, 1)
-    # pdb.set_trace()
-    # print(alpha[10][:20])
     alpha_file_name = args.image.split('.')[0] + '_alpha' + '.' + args.image.split('.')[1]
     cv2.imwrite(alpha_file_name, (1-alpha) * 255.0)
-    # cv2.imwrite("input.jpg", image_input)
-    # cv2.imwrite("scribles.jpg", scribbles_input)
+    cv2.imwrite("input.jpg", image_input)
+    cv2.imwrite("scribles.jpg", scribbles_input)
     
     # Plotting eigenvalues and eigenvectors
     plt.imshow(np.clip(eig_vecs.real.T[1].reshape(prior.shape), 0, 1))
-    # plt.plot(eig_vecs.real.T[1])
     plt.show()
 
 
