@@ -107,8 +107,8 @@ def main():
     cv2.imwrite("scribles.jpg", scribbles_input)
     
     # Plotting eigenvalues and eigenvectors
-    plt.imshow(np.clip(eig_vecs.real.T[1].reshape(prior.shape), 0, 1))
-    plt.show()
+    #plt.imshow(np.clip(eig_vecs.real.T[1].reshape(prior.shape), 0, 1))
+    #plt.show()
 
 
 
