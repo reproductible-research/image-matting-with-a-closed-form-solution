@@ -25,7 +25,7 @@ To use this implementation, follow these steps:
 After cloning the repository, run the following command in your terminal:
 
 ```bash
-python main.py input_image.png -s scribbles.png -o output_alpha.png
+python main.py input_image.png -s scribbles.png 
 ```
 
 ## 📷 Example
