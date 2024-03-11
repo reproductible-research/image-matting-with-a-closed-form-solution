@@ -14,7 +14,7 @@ import sys
 
 
 #Calcualte Matting Laplacian 
-def getLaplacian(I, consts, epsilon=1e-7, win_size=1):
+def getLaplacian(I, consts, epsilon=0.00001, win_size=1):
     '''
     This function is used to calculate the laplacian matting as described in the paper
     and return the sparse matrix of L  
