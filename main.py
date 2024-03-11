@@ -17,7 +17,7 @@ import sys
 def getLaplacian(I, consts, epsilon=0.00001, win_size=1):
     '''
     This function is used to calculate the laplacian matting as described in the paper
-    and return the sparse matrix of L  
+    and return the sparse matrix of L  (Eq. 21)
     '''
     logging.info('Computing Matting Laplacian ...')
     neb_size = (win_size * 2 + 1) ** 2
@@ -64,28 +64,30 @@ def main():
     arg_parser.add_argument('-s', '--scribbles', type=str, help='input scribbles')
     #arg_parser.add_argument('-o', '--output', type=str, required=True, help='output image')    
     args = arg_parser.parse_args()
-    image_input = cv2.imread(args.image, cv2.IMREAD_COLOR) 
-    
+    image_input = cv2.imread(args.image, cv2.IMREAD_COLOR)  #read the input image
+    #Normalization
     image=image_input/ 255.0
 
-    scribbles_input = cv2.imread(args.scribbles, cv2.IMREAD_COLOR)
+    scribbles_input = cv2.imread(args.scribbles, cv2.IMREAD_COLOR) #read the scribbles image
     scribbles= scribbles_input / 255.0
-    print(image_input.shape)
-    print(scribbles_input.shape)
+    #print(image_input.shape)
+    #print(scribbles_input.shape)
     if image_input.shape != scribbles_input.shape:
         print("Error: There was a problem with the user input.")
         sys.exit()
-    prior = np.sign(np.sum(image - scribbles, axis=2)) / 2 + 0.5
-    #Constant map 
-    consts_map = prior != 0.5
+    prior = np.sign(np.sum(image - scribbles, axis=2)) / 2 + 0.5 
+    #Constant Map 
+    consts_map = prior != 0.5 
+    #Calculating Matting Laplacian 
     laplacian = getLaplacian(image, consts_map)
-    scribbles_confidence=100
+    scribbles_confidence=100 #the scribbles confidences
     prior_confidence = scribbles_confidence * consts_map
     confidence = scipy.sparse.diags(prior_confidence.flatten())
     logging.info('Solving the Linear System ...')
-    solution = scipy.sparse.linalg.spsolve(laplacian + confidence,prior.flatten() * prior_confidence.flatten())
-    #Ensure that the result lie within the range [0, 1]
+    solution = scipy.sparse.linalg.spsolve(laplacian + confidence,prior.flatten() * prior_confidence.flatten()) #Solving the linear system
+    #Ensure that the result lies within the range [0, 1]
     alpha = np.clip(solution.reshape(prior.shape), 0, 1)
+    #Save the images
     cv2.imwrite("output.png", (1-alpha) * 255.0)
     cv2.imwrite("input.png", image_input)
     cv2.imwrite("scribles.png", scribbles_input)
