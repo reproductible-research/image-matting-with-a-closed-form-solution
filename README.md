@@ -47,7 +47,7 @@ Here is an example of input image, scribbles image, and the obtained result:
 
 | Original image                           | Scribbled image                           | Output alpha                             | 
 |------------------------------------------|-------------------------------------------|------------------------------------------|
-| ![Original image](input.png)   | ![Scribbled image](scribles.png) | ![Output alpha](output.png) |
+| ![Original image](input_image.png)   | ![Scribbled image](scribbles.png) | ![Output alpha](output.png) |
 
 
 
