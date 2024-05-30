@@ -95,8 +95,6 @@ def main():
     alpha = np.clip(solution.reshape(prior.shape), 0, 1)
     #Save the images
     cv2.imwrite("output.png", (1-alpha) * 255.0)
-    cv2.imwrite("input.png", image_input)
-    cv2.imwrite("scribles.png", scribbles_input)
 
 
 
