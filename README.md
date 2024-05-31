@@ -16,6 +16,7 @@ The purpose of this project is to provide a Python implementation of the image m
 
 ## Online Demo
 An online demo of this work is available [here](https://ipolcore.ipol.im/demo/clientApp/demo.html?id=77777000489). Users can test the image matting algorithm with their own images through this interactive demo. There are some examples available on the website, or simply upload an image and the scribbles to the demo interface and obtain the results of foreground and background estimation.
+
 Here is an example of input image, scribbles image, and the obtained result:
 
 
