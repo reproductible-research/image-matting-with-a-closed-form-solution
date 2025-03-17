@@ -20,7 +20,7 @@ import sys
 
 
 #Calcualte Matting Laplacian 
-def getLaplacian(I, consts, epsilon=0.00001, win_size=1):
+def getLaplacian(I, consts, epsilon=0.00001, win_size=3):
     '''
     This function is used to calculate the laplacian matting as described in the paper
     and return the sparse matrix of L  (Eq. 21)
@@ -30,6 +30,8 @@ def getLaplacian(I, consts, epsilon=0.00001, win_size=1):
     # Why the neighborhood size to be this ?
     # Why is the window size fixed at 1 ?
     
+    if win_size == 3:
+        win_size = 1
     neb_size = (win_size * 2 + 1) ** 2
     h, w, c = I.shape
     img_size = w * h
@@ -85,6 +87,8 @@ def main():
     arg_parser = argparse.ArgumentParser(description=__doc__)
     arg_parser.add_argument('image', type=str, help='input image')
     arg_parser.add_argument('-s', '--scribbles', type=str, help='input scribbles')
+    arg_parser.add_argument('-k', '--win_size', type=int, default=3, choices=[3, 9], help='window size')
+    arg_parser.add_argument('-e', '--epsilon', type=float, default=1e-5, choices=[1e-5, 1e-4, 1e-3, 1e-2], help='epsilon value')
     #arg_parser.add_argument('-o', '--output', type=str, required=True, help='output image')    
     args = arg_parser.parse_args()
     
@@ -118,8 +122,10 @@ def main():
     prior_confidence = scribbles_confidence * consts_map
     confidence = scipy.sparse.diags(prior_confidence.flatten())
     
-    #Calculating Matting Laplacian 
-    laplacian = getLaplacian(image, consts_map)
+    #Calculating Matting Laplacian
+    win_size = args.win_size
+    epsilon = args.epsilon
+    laplacian = getLaplacian(image, consts_map, epsilon=epsilon, win_size=win_size)
     
     # Solve the laplacian using Scipy sparse solver to get the matting value, alpha
     logging.info('Solving the Linear System ...')
