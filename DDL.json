@@ -3,7 +3,7 @@
        "enable_reconstruct": true,
        "files": {
           "input.png": "input",
-          "scribles.png": "scribles",
+          "scribbles.png": "scribbles",
           "output.png": "output"
        }
     },
@@ -20,7 +20,7 @@
     },
     "inputs": [
        {
-          "description": "Input",
+          "description": "Input Image",
           "dtype": "3x8i",
           "ext": ".png",
           "max_pixels": "2048*2048",
@@ -28,7 +28,7 @@
           "type": "image"
        },
        {
-          "description": "Scribles",
+          "description": "Scribbles",
           "dtype": "3x8i",
           "ext": ".png",
           "max_pixels": "2048*2048",
@@ -37,14 +37,42 @@
           "type": "image"
        }
     ],
+    "params": [
+       {
+          "id": "radius",
+          "type": "selection_radio",
+          "label": "Window Size",
+          "comments": "",
+          "values": {
+             "3x3": 1,
+             "5x5": 2,
+             "7x7": 3,
+             "9x9": 4
+          },
+          "default_value": 1
+       },
+       {
+          "id": "epsilon",
+          "type": "selection_radio",
+          "label": "Espilon value",
+          "comments": "Provides numerical stability",
+          "values": {
+             "1e-5": 0.00001,
+             "1e-4": 0.0001,
+             "1e-3": 0.001,
+             "1e-2": 0.01
+          },
+          "default_value": 0.00001
+       }
+    ],
     "results": [
        {
           "contents": {
              "Input Image": {
-                "img": "input.png"
+                "img": "input_0.png"
              },
              "Scribbles": {
-                "img": "scribles.png"
+                "img": "input_1.png"
              },
              "Output Matting": {
                 "img": "output.png"
@@ -55,13 +83,13 @@
        },
        {
           "contents": {
-             "Input Image": "input.png",
-             "Scribles": "scribles.png",
+             "Input Image": "input_0.png",
+             "Scribbles": "input_1.png",
              "Output Matting": "output.png"
           },
           "label": "The images can be downloaded here:",
           "type": "file_download"
        }
     ],
-    "run": "python $bin/main.py $input_0 --scribbles $input_1"
+    "run": "python $bin/main.py $input_0 --scribbles $input_1 --radius $radius --epsilon $epsilon"
  }

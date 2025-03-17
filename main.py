@@ -87,8 +87,10 @@ def main():
     parser = argparse.ArgumentParser(description="Closed-form Image Matting")
     parser.add_argument('image', type=str, help='Path to input image')
     parser.add_argument('-s', '--scribbles', type=str, required=True, help='Path to scribbles image')
-    parser.add_argument('-e', '--epsilon', type=float, default=1e-5, help='Regularization parameter epsilon')
-    parser.add_argument('-r', '--radius', type=int, default=1, help='Window radius for local matting')
+    parser.add_argument('-e', '--epsilon', type=float, default=1e-5, choices=[1e-5, 1e-4, 1e-3, 1e-2], help='Regularization parameter epsilon')
+    
+    # window size or window radius? 
+    parser.add_argument('-r', '--radius', type=int, default=1, choices=[1, 2, 3, 4], help='Window radius for local matting')
     args = parser.parse_args()
     
     original_image = cv2.imread(args.image, cv2.IMREAD_COLOR) / 255.0
@@ -114,6 +116,8 @@ def main():
     )
     
     final_alpha = np.clip(refined_alpha.reshape(initial_alpha.shape), 0, 1)
+    
+    # input image and scribble not visible in the demo -> to be fixed
     cv2.imwrite("output.png", (1 - final_alpha) * 255.0)
     
     logging.info('Alpha matte saved as output.png')

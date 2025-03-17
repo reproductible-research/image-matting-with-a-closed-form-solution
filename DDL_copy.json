@@ -37,32 +37,6 @@
           "type": "image"
        }
     ],
-    "params": [
-      {
-         "id": "win_size",
-         "type": "selection_radio",
-         "label": "Window Size",
-         "comments": "",
-         "values": {
-            "3x3": 3,
-            "9x9": 9
-         },
-         "default_value": 3
-      },
-      {
-         "id": "epsilon",
-         "type": "selection_radio",
-         "label": "Espilon value",
-         "comments": "",
-         "values": {
-            "1e-5": 1e-5,
-            "1e-4": 1e-4,
-            "1e-3": 1e-3,
-            "1e-2": 1e-2
-         },
-         "default_value": 1e-5
-      }
-    ],
     "results": [
        {
           "contents": {
@@ -89,5 +63,5 @@
           "type": "file_download"
        }
     ],
-    "run": "python $bin/main_copy.py $input_0 --scribbles $input_1 --win_size $win_size --epsilon $epsilon"
+    "run": "python $bin/main.py $input_0 --scribbles $input_1"
  }
