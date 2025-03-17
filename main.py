@@ -52,13 +52,12 @@ def compute_matting_laplacian(image, constraints_map, epsilon=1e-5, window_radiu
             # Extract local window indices
             window_indices = pixel_indices[row - window_radius: row + window_radius + 1, col - window_radius: col + window_radius + 1].flatten()
             window_pixels = image[row - window_radius: row + window_radius + 1, col - window_radius: col + window_radius + 1, :].reshape(window_size, channels)
-            
+            # Eq. 23 in the paper
             # Compute mean and covariance of local window
             mean_window = np.mean(window_pixels, axis=0)
             covariance_inv = np.linalg.inv(
                 (window_pixels.T @ window_pixels / window_size) - np.outer(mean_window, mean_window) + epsilon / window_size * np.eye(channels)
-            )  # Eq. 23 in the paper
-            
+            )  
             # Compute affinity matrix within the window
             centered_window_pixels = window_pixels - mean_window
             local_affinity = (1 + centered_window_pixels @ covariance_inv @ centered_window_pixels.T) / window_size
@@ -85,50 +84,39 @@ def compute_matting_laplacian(image, constraints_map, epsilon=1e-5, window_radiu
 def main():
     logging.basicConfig(level=logging.INFO)
     
-    # Argument parsing
     parser = argparse.ArgumentParser(description="Closed-form Image Matting")
     parser.add_argument('image', type=str, help='Path to input image')
     parser.add_argument('-s', '--scribbles', type=str, required=True, help='Path to scribbles image')
+    parser.add_argument('-e', '--epsilon', type=float, default=1e-5, help='Regularization parameter epsilon')
+    parser.add_argument('-r', '--radius', type=int, default=1, help='Window radius for local matting')
     args = parser.parse_args()
     
-    # Load input images
-    original_image = cv2.imread(args.image, cv2.IMREAD_COLOR) / 255.0  # Normalize to [0,1]
+    original_image = cv2.imread(args.image, cv2.IMREAD_COLOR) / 255.0
     scribbles_image = cv2.imread(args.scribbles, cv2.IMREAD_COLOR) / 255.0
     
     if original_image.shape != scribbles_image.shape:
         print("Error: Input image and scribbles must have the same dimensions.")
         sys.exit(1)
     
-    # Compute initial alpha estimation from scribbles
     initial_alpha = np.sign(np.sum(original_image - scribbles_image, axis=2)) / 2 + 0.5
-    
-    # Define known regions where alpha is either 0 or 1
     known_alpha_mask = initial_alpha != 0.5
     
-    # Compute Matting Laplacian matrix
-    laplacian_matrix = compute_matting_laplacian(original_image, known_alpha_mask)
+    laplacian_matrix = compute_matting_laplacian(original_image, known_alpha_mask, args.epsilon, args.radius)
     
-    # Define confidence weight for scribbles
     scribble_confidence = 100
     confidence_weights = scribble_confidence * known_alpha_mask
     confidence_diagonal = scipy.sparse.diags(confidence_weights.flatten())
     
     logging.info('Solving the linear system for alpha matte...')
-    
-    # Solve for alpha matte using sparse linear solver
     refined_alpha = scipy.sparse.linalg.spsolve(
         laplacian_matrix + confidence_diagonal,
         initial_alpha.flatten() * confidence_weights.flatten()
     )
     
-    # Clip alpha values to [0,1] and reshape to original image shape
     final_alpha = np.clip(refined_alpha.reshape(initial_alpha.shape), 0, 1)
-    
-    # Save the alpha matte as an image
     cv2.imwrite("output.png", (1 - final_alpha) * 255.0)
     
     logging.info('Alpha matte saved as output.png')
-
 
 if __name__ == "__main__":
     main()
