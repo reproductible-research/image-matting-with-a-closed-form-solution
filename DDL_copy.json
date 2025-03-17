@@ -89,5 +89,5 @@
           "type": "file_download"
        }
     ],
-    "run": "python $bin/main.py $input_0 --scribbles $input_1 --win_size $position_0 --epsilon $position_1"
+    "run": "python $bin/main_copy.py $input_0 --scribbles $input_1 --win_size $win_size --epsilon $epsilon"
  }

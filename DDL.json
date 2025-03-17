@@ -1,63 +1,67 @@
 {
+    "archive": {
+       "enable_reconstruct": true,
+       "files": {
+          "input.png": "input",
+          "scribles.png": "scribles",
+          "output.png": "output"
+       }
+    },
     "general": {
-        "demo_title": "Python Demo Template",
-        "requirements": "docker"
+       "demo_title": "A Closed Form Solution to Natural Image Matting",
+       "requirements": "docker",
+       "xlink_article": "https://www.ipol.im/pub/pre/532/",
+       "description": "This demo is the implementation of Image Matting using Closed Form Solution. <br>You need to upload the input image and the image with scribbles or you can use the examples provided below.<br>[1] A. Levin, D. Lischinski, and Y. Weiss, \"A Closed Form Solution to Natural Image Matting,\" IEEE Conf. on Computer Vision and Pattern Recognition (CVPR), June 2006, New York."
     },
     "build": {
-        "url": "git@github.com:mlbriefs/template-python.git",
-        "rev": "origin/main",
-        "dockerfile": ".ipol/Dockerfile"
+       "url": "https://github.com/aissa-abdelaziz/Image-Matting.git",
+       "rev": "origin/main",
+       "dockerfile": ".ipol/Dockerfile"
     },
     "inputs": [
-        {
-            "description": "input",
-            "max_pixels": "3000*3000",
-            "dtype": "x8i",
-            "ext": ".png",
-            "type": "image"
-        }
-    ],
-    "params": [
-        {
-            "id": "sigma",
-            "label": "sigma",
-            "comments": "Noise standard deviation",
-            "type": "range",
-            "values": {
-                "default": "30",
-                "max": 300,
-                "min": 0,
-                "step": 0.1
-            }
-        }
+       {
+          "description": "Input",
+          "dtype": "3x8i",
+          "ext": ".png",
+          "max_pixels": "2048*2048",
+          "max_weight": "10*1024*1024",
+          "type": "image"
+       },
+       {
+          "description": "Scribles",
+          "dtype": "3x8i",
+          "ext": ".png",
+          "max_pixels": "2048*2048",
+          "max_weight": "10*1024*1024",
+          "required": true,
+          "type": "image"
+       }
     ],
     "results": [
-        {
-            "type": "gallery",
-            "contents": {
-                "Input": {
-                    "img": "input_0.png"
-                },
-                "Output": {
-                    "img": "output.png"
-                }
-            }
-        },
-        {
-            "contents": "stdout.txt",
-            "label": "<p>Output</p>",
-            "type": "text_file"
-        }
+       {
+          "contents": {
+             "Input Image": {
+                "img": "input.png"
+             },
+             "Scribbles": {
+                "img": "scribles.png"
+             },
+             "Output Matting": {
+                "img": "output.png"
+             }
+          },
+          "label": "<h2>Images</h2>",
+          "type": "gallery"
+       },
+       {
+          "contents": {
+             "Input Image": "input.png",
+             "Scribles": "scribles.png",
+             "Output Matting": "output.png"
+          },
+          "label": "The images can be downloaded here:",
+          "type": "file_download"
+       }
     ],
-    "archive": {
-        "enable_reconstruct": true,
-        "files": {
-            "input_0.png": "Input",
-            "output.png": "Output"
-        },
-        "info": {
-            "run_time": "run time"
-        }
-    },
-    "run": "python $bin/main.py --input $input_0 --sigma $sigma --output output.png"
-}
+    "run": "python $bin/main.py $input_0 --scribbles $input_1"
+ }
