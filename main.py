@@ -22,13 +22,13 @@ def compute_matting_laplacian(image, constraints_map, epsilon=1e-5, window_radiu
     Computes the Matting Laplacian matrix using the closed-form matting method.
     
     Args:
-        image (numpy.ndarray): Input image normalized to [0,1].
-        constraints_map (numpy.ndarray): Binary mask indicating known alpha values.
-        epsilon (float): Regularization parameter to ensure numerical stability.
-        window_radius (int): Radius of the local window.
+        image : Input image normalized to [0,1].
+        constraints_map : Binary mask indicating known alpha values.
+        epsilon : Regularization parameter to ensure numerical stability.
+        window_radius : Radius of the local window.
     
     Returns:
-        scipy.sparse.csr_matrix: The Matting Laplacian sparse matrix.
+        The Matting Laplacian sparse matrix.
     '''
     logging.info('Computing Matting Laplacian...')
     
