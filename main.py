@@ -38,10 +38,10 @@ def compute_matting_laplacian(image, constraints_map, epsilon=1e-5, window_radiu
     pixel_indices = np.arange(num_pixels).reshape(height, width)
     
     # Estimate the number of nonzero elements for sparse matrix allocation
-    estimated_nonzeros = int(((1 - constraints_map[window_radius:-window_radius, window_radius:-window_radius]).sum()) * (window_size ** 2))
-    row_indices = np.zeros(estimated_nonzeros)
-    col_indices = np.zeros(estimated_nonzeros)
-    values = np.zeros(estimated_nonzeros)
+    pair_relations = int(((1 - constraints_map[window_radius:-window_radius, window_radius:-window_radius]).sum()) * (window_size ** 2))
+    row_indices = np.zeros(pair_relations)
+    col_indices = np.zeros(pair_relations)
+    values = np.zeros(pair_relations)
     idx = 0
     
     for col in range(window_radius, width - window_radius):
