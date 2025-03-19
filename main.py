@@ -98,24 +98,31 @@ def main():
         print("Error: Input image and scribbles must have the same dimensions.")
         sys.exit(1)
     
-    initial_alpha = np.sign(np.sum(original_image - scribbles_image, axis=2)) / 2 + 0.5
-    known_alpha_mask = initial_alpha != 0.5
-    
-    laplacian_matrix = compute_matting_laplacian(original_image, known_alpha_mask, args.epsilon, args.radius)
+    # Changed from I - S to S - I as in the paper we say 1 is foreground. When doing the following 
+    # operation as I - S, we get 1 as the background
+    initial_alpha = np.sign(np.sum(scribbles_image - original_image, axis=2)) / 2 + 0.5
+    known_alpha_mask = 1 * (initial_alpha != 0.5)
     
     scribble_confidence = 100
-    confidence_weights = scribble_confidence * known_alpha_mask
-    confidence_diagonal = scipy.sparse.diags(confidence_weights.flatten())
+    # -- The following stuff has been commented out and replaced with alterative
+    # -- expressions to match the equations in the paper
+    # confidence_weights = scribble_confidence * known_alpha_mask
+    # confidence_diagonal = scipy.sparse.diags(confidence_weights.flatten())
+    confidence_diagonal = scribble_confidence * scipy.sparse.diags(known_alpha_mask.flatten())
+    foreground_alpha_mask = 1 * (initial_alpha == 1.0)
+    laplacian_matrix = compute_matting_laplacian(original_image, known_alpha_mask, args.epsilon, args.radius)
     
     logging.info('Solving the linear system for alpha matte...')
     refined_alpha = scipy.sparse.linalg.spsolve(
         laplacian_matrix + confidence_diagonal,
-        initial_alpha.flatten() * confidence_weights.flatten()
+        scribble_confidence * foreground_alpha_mask.flatten()
     )
+    # initial_alpha.flatten() * confidence_weights.flatten()
     
     final_alpha = np.clip(refined_alpha.reshape(initial_alpha.shape), 0, 1)
     
-    cv2.imwrite("output.png", (1 - final_alpha) * 255.0)
+    # changed from 1 - final_alpha to final_alpha
+    cv2.imwrite("output.png", (final_alpha) * 255.0)
     
     logging.info('Alpha matte saved as output.png')
 
