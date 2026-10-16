@@ -15,6 +15,7 @@ import logging
 import sys
 import argparse
 from scipy.sparse import spdiags, csr_matrix
+from scipy.ndimage import binary_erosion
 
 
 def compute_matting_laplacian(image, constraints_map, epsilon=1e-5, window_radius=1):
@@ -33,21 +34,32 @@ def compute_matting_laplacian(image, constraints_map, epsilon=1e-5, window_radiu
     logging.info('Computing Matting Laplacian...')
     
     window_size = (window_radius * 2 + 1) ** 2  # Total pixels in a window
+    
+    # A window can be skipped only if all its pixels are known. Eroding the mask of
+    # known pixels with a window-sized structuring element marks exactly the pixels
+    # whose window is fully known (as in the original implementation of the authors).
+    constraints_map = binary_erosion(constraints_map.astype(bool),
+                                     structure=np.ones((2 * window_radius + 1, 2 * window_radius + 1)))
     height, width, channels = image.shape
     num_pixels = width * height
     pixel_indices = np.arange(num_pixels).reshape(height, width)
     
-    # Estimate the number of nonzero elements for sparse matrix allocation
-    pair_relations = int(((1 - constraints_map[window_radius:-window_radius, window_radius:-window_radius]).sum()) * (window_size ** 2))
-    row_indices = np.zeros(pair_relations)
-    col_indices = np.zeros(pair_relations)
-    values = np.zeros(pair_relations)
+    # The affinity values of each window are stored in fixed-size buffers, which are
+    # periodically summed into a sparse matrix. Storing the values of all the windows
+    # at once would require O(N * window_size^2) memory, much more than the final
+    # matrix, which has at most (4 * window_radius + 1)^2 non-zeros per row.
+    pairs_per_window = window_size ** 2
+    buffer_size = max(1, 10000 * 81 // pairs_per_window) * pairs_per_window
+    row_indices = np.zeros(buffer_size, dtype=np.int64)
+    col_indices = np.zeros(buffer_size, dtype=np.int64)
+    values = np.zeros(buffer_size)
+    affinity_matrix = csr_matrix((num_pixels, num_pixels))
     idx = 0
     
     for col in range(window_radius, width - window_radius):
         for row in range(window_radius, height - window_radius):
             if constraints_map[row, col]:
-                continue  # Skip known pixels
+                continue  # Skip windows whose pixels are all known
             
             # Extract local window indices
             window_indices = pixel_indices[row - window_radius: row + window_radius + 1, col - window_radius: col + window_radius + 1].flatten()
@@ -67,14 +79,14 @@ def compute_matting_laplacian(image, constraints_map, epsilon=1e-5, window_radiu
             col_indices[idx:idx + window_size ** 2] = np.tile(window_indices, window_size)
             values[idx:idx + window_size ** 2] = local_affinity.flatten()
             idx += window_size ** 2
+            
+            # Flush the buffers into the sparse affinity matrix when they are full
+            if idx == buffer_size:
+                affinity_matrix += csr_matrix((values, (row_indices, col_indices)), shape=(num_pixels, num_pixels))
+                idx = 0
     
-    # Trim arrays to actual size
-    row_indices = row_indices[:idx]
-    col_indices = col_indices[:idx]
-    values = values[:idx]
-    
-    # Construct sparse affinity matrix
-    affinity_matrix = csr_matrix((values, (row_indices, col_indices)), shape=(num_pixels, num_pixels))
+    # Add the remaining values to the sparse affinity matrix
+    affinity_matrix += csr_matrix((values[:idx], (row_indices[:idx], col_indices[:idx])), shape=(num_pixels, num_pixels))
     diagonal_matrix = spdiags(affinity_matrix.sum(axis=1).flatten(), 0, num_pixels, num_pixels)
     laplacian_matrix = diagonal_matrix - affinity_matrix
     
