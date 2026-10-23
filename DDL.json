@@ -23,7 +23,7 @@
           "description": "Input Image",
           "dtype": "3x8i",
           "ext": ".png",
-          "max_pixels": "2048*2048",
+          "max_pixels": "800*600",
           "max_weight": "10*1024*1024",
           "type": "image"
        },
@@ -31,7 +31,7 @@
           "description": "Scribbles",
           "dtype": "3x8i",
           "ext": ".png",
-          "max_pixels": "2048*2048",
+          "max_pixels": "800*600",
           "max_weight": "10*1024*1024",
           "required": true,
           "type": "image"
@@ -45,16 +45,14 @@
           "comments": "",
           "values": {
              "3x3": 1,
-             "5x5": 2,
-             "7x7": 3,
-             "9x9": 4
+             "5x5": 2
           },
           "default_value": 1
        },
        {
           "id": "epsilon",
           "type": "selection_radio",
-          "label": "Espilon value",
+          "label": "Epsilon value",
           "comments": "Provides numerical stability",
           "values": {
              "1e-5": 0.00001,
