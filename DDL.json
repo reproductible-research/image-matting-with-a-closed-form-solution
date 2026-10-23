@@ -8,7 +8,7 @@
        }
     },
     "general": {
-       "demo_title": "A Closed Form Solution to Natural Image Matting",
+       "demo_title": "Image Matting using Closed Form Solution",
        "requirements": "docker",
        "xlink_article": "https://www.ipol.im/pub/pre/532/",
        "description": "This demo is the implementation of Image Matting using Closed Form Solution. <br>You need to upload the input image and the image with scribbles or you can use the examples provided below.<br>[1] A. Levin, D. Lischinski, and Y. Weiss, \"A Closed Form Solution to Natural Image Matting,\" IEEE Conf. on Computer Vision and Pattern Recognition (CVPR), June 2006, New York."
