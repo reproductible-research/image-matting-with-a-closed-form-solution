@@ -64,7 +64,7 @@ def compute_matting_laplacian(image, constraints_map, epsilon=1e-5, window_radiu
             # Extract local window indices
             window_indices = pixel_indices[row - window_radius: row + window_radius + 1, col - window_radius: col + window_radius + 1].flatten()
             window_pixels = image[row - window_radius: row + window_radius + 1, col - window_radius: col + window_radius + 1, :].reshape(window_size, channels)
-            # Eq. 23 in the paper
+            # Affinities, Eq. (17) of the article
             # Compute mean and covariance of local window
             mean_window = np.mean(window_pixels, axis=0)
             covariance_inv = np.linalg.inv(
@@ -110,16 +110,10 @@ def main():
         print("Error: Input image and scribbles must have the same dimensions.")
         sys.exit(1)
     
-    # Changed from I - S to S - I as in the paper we say 1 is foreground. When doing the following 
-    # operation as I - S, we get 1 as the background
     initial_alpha = np.sign(np.sum(scribbles_image - original_image, axis=2)) / 2 + 0.5
     known_alpha_mask = 1 * (initial_alpha != 0.5)
     
     scribble_confidence = 100
-    # -- The following stuff has been commented out and replaced with alterative
-    # -- expressions to match the equations in the paper
-    # confidence_weights = scribble_confidence * known_alpha_mask
-    # confidence_diagonal = scipy.sparse.diags(confidence_weights.flatten())
     confidence_diagonal = scribble_confidence * scipy.sparse.diags(known_alpha_mask.flatten())
     foreground_alpha_mask = 1 * (initial_alpha == 1.0)
     laplacian_matrix = compute_matting_laplacian(original_image, known_alpha_mask, args.epsilon, args.radius)
@@ -129,11 +123,9 @@ def main():
         laplacian_matrix + confidence_diagonal,
         scribble_confidence * foreground_alpha_mask.flatten()
     )
-    # initial_alpha.flatten() * confidence_weights.flatten()
     
     final_alpha = np.clip(refined_alpha.reshape(initial_alpha.shape), 0, 1)
     
-    # changed from 1 - final_alpha to final_alpha
     cv2.imwrite("output.png", (final_alpha) * 255.0)
     
     logging.info('Alpha matte saved as output.png')
