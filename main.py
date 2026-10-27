@@ -100,7 +100,7 @@ def main():
     parser.add_argument('image', type=str, help='Path to input image')
     parser.add_argument('-s', '--scribbles', type=str, required=True, help='Path to scribbles image')
     parser.add_argument('-e', '--epsilon', type=float, default=1e-5, choices=[1e-5, 1e-4, 1e-3, 1e-2], help='Regularization parameter epsilon')
-    parser.add_argument('-r', '--radius', type=int, default=1, choices=[1, 2, 3, 4], help='Window radius for local matting')
+    parser.add_argument('-r', '--radius', type=int, default=1, choices=[1, 2], help='Window radius for local matting')
     args = parser.parse_args()
     
     original_image = cv2.imread(args.image, cv2.IMREAD_COLOR) / 255.0
