@@ -53,5 +53,4 @@ python main.py input_image.png -s scribbles.png -r 1 -e 1e-5
 
 
 ## Reference
-
-- [Anat Levin, Dani Lischinski, and Yair Weiss, A closed-form solution to natural image matting, IEEE Transactions on Pattern Analysis and Machine Intelligence, 30 (2008), pp. 228– 242.](https://people.csail.mit.edu/alevin/papers/Matting-Levin-Lischinski-Weiss-CVPR06.pdf).
+- Anat Levin, Dani Lischinski, and Yair Weiss, [A closed-form solution to natural image matting](https://doi.org/10.1109/TPAMI.2007.1177), IEEE Transactions on Pattern Analysis and Machine Intelligence, 30 (2008), pp. 228–242.
